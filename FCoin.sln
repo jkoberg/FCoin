@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FCoin", "FCoin\FCoin.fsproj", "{CCC76432-8336-4BDC-8FE5-8B717EDEDC3E}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FCoinTests", "FCoinTests\FCoinTests.fsproj", "{02AAA541-0338-43F6-96D5-C60B0B6BE69D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{CCC76432-8336-4BDC-8FE5-8B717EDEDC3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCC76432-8336-4BDC-8FE5-8B717EDEDC3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCC76432-8336-4BDC-8FE5-8B717EDEDC3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02AAA541-0338-43F6-96D5-C60B0B6BE69D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02AAA541-0338-43F6-96D5-C60B0B6BE69D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02AAA541-0338-43F6-96D5-C60B0B6BE69D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02AAA541-0338-43F6-96D5-C60B0B6BE69D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

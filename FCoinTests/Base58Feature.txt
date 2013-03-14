@@ -1,0 +1,17 @@
+﻿Feature: Base58check encoding and verification
+
+Scenario: Encoding a byte array
+  Given a version byte 0 and payload "Hi There"
+  When base58check is applied
+  Then the result is "12NFk3uaQ6E3kbEAdL"
+
+Scenario: Verifiying an encoded string
+  Given a base8check string "12NFk3uaQ6E3kbEAdL"
+  When the string is verified
+  Then it verifies and has version 0 and payload "Hi There"
+
+Scenario: Verifying an invalid string
+  Given a base8check string "zzzzzzzzzzzzzzzzz"
+  When the string is verified
+  Then no result is obtained
+
