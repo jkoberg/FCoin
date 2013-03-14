@@ -3,9 +3,7 @@
 let chars = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
 let encode = Radix.Encoder(chars)
-
 let countLeading item = Seq.takeWhile ((=) item) >> Seq.length
-
 let hash = Digest.sha256 >> Digest.sha256
 
 let toBase58check (version:byte) (payload:byte[]) =
@@ -16,6 +14,8 @@ let toBase58check (version:byte) (payload:byte[]) =
   let strippedB58 = encode.FromBytes checksummed
   let encoded = new string(Array.create zeroCount encode.zeroDigit) + strippedB58
   encoded
+
+let encodeAddress = Digest.sha256 >> Digest.ripemd160 >> toBase58check 0uy
 
 let verifyBase58check (encoded:string) =
   let zeroCount = encoded |> countLeading encode.zeroDigit
@@ -31,4 +31,3 @@ let verifyBase58check (encoded:string) =
     let payload = body.[1..]
     Some (version, payload)
 
-let encodeAddress = Digest.sha256 >> Digest.ripemd160 >> toBase58check 0uy 
