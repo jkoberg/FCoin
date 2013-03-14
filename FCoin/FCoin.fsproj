@@ -8,7 +8,7 @@
     <ProjectGuid>ccc76432-8336-4bdc-8fe5-8b717ededc3e</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>BitcoinF</RootNamespace>
-    <AssemblyName>BitcoinF</AssemblyName>
+    <AssemblyName>FCoin</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <Name>FCoin</Name>
   </PropertyGroup>
@@ -52,7 +52,10 @@
     <Compile Include="Base58.fs" />
     <Compile Include="Magic.fs" />
     <Compile Include="Sign.fs" />
-    <Compile Include="Program.fs" />
+    <Compile Include="Messages.fs" />
+    <Compile Include="Network.fs" />
+    <Compile Include="Main.fs" />
+    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
