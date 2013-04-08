@@ -1,10 +1,15 @@
-﻿
+﻿module Main
 
-open Base58
+open System.Collections.Generic
 
 [<EntryPoint>]
 let main argv = 
-    printfn "Base 58 string: %s" (Base58.toBase58check 0uy ("Hello there guys!"B |> Digest.sha256 |> Digest.ripemd160))
-    printfn "Verify string: %A" (Base58.verifyBase58check "93VYUMzRG9DdbRP72uQXjaWibbQwygnvaCu9DumcqDjGybD864T")
-    printfn "%A" argv
+    let env = System.Environment.GetEnvironmentVariables()
+    let config =
+      Config.defaults 
+      |> Config.withEnvironment env
+      |> Config.withCommandLine argv
+      |> Config.withConfiguredFiles
+      |> Config.withUserChoices 
+    printfn "%A" config
     0 // return an integer exit code
