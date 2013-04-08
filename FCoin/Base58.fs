@@ -4,14 +4,14 @@ let chars = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
 let encode = Radix.Encoder(chars)
 let countLeading item = Seq.takeWhile ((=) item) >> Seq.length
-let hash = Digest.sha256 >> Digest.sha256
+let hashOf = Digest.sha256 >> Digest.sha256
 
 let toBase58check (version:byte) (payload:byte[]) =
   let body = Array.append [|version|] payload
-  let checksum = (hash body).[..3]
-  let checksummed = Array.append body checksum
-  let zeroCount = checksummed |> countLeading 0uy
-  let strippedB58 = encode.FromBytes checksummed
+  let checksum = (hashOf body).[..3]
+  let withchecksum = Array.append body checksum
+  let zeroCount = withchecksum |> countLeading 0uy
+  let strippedB58 = encode.FromBytes withchecksum
   let encoded = new string(Array.create zeroCount encode.zeroDigit) + strippedB58
   encoded
 
@@ -21,10 +21,10 @@ let verifyBase58check (encoded:string) =
   let zeroCount = encoded |> countLeading encode.zeroDigit
   let strippedB58 = encoded.[zeroCount..]
   let stripped = encode.ToBytes strippedB58
-  let checksummed = Array.append (Array.zeroCreate zeroCount) stripped
-  let checksumidx = checksummed.Length - 4
-  let body, checksum = checksummed.[..(checksumidx-1)], checksummed.[checksumidx..]
-  if checksum <> (hash body).[..3] then
+  let withchecksum = Array.append (Array.zeroCreate zeroCount) stripped
+  let checksumidx = withchecksum.Length - 4
+  let body, checksum = withchecksum.[..(checksumidx-1)], withchecksum.[checksumidx..]
+  if checksum <> (hashOf body).[..3] then
     None
   else 
     let version = body.[0]
