@@ -3,20 +3,8 @@ open System
 open System.Security.Cryptography
 
 
-let asNullable v = new Nullable<_>(v)
-
-let keyParams =
-  new CngKeyCreationParameters(
-    ExportPolicy = asNullable CngExportPolicies.AllowPlaintextExport
-    )
-
-let newDsaKey () =
-  let k = CngKey.Create(CngAlgorithm.ECDsaP256, null, keyParams)
-  k.Export(CngKeyBlobFormat.Pkcs8PrivateBlob)
-
-
 let verify publickey signature (data:byte[]) =
-  let k = CngKey.Create(CngAlgorithm.ECDsaP256, null, keyParams)
+  let k = CngKey.Import(publickey, CngKeyBlobFormat.EccPublicBlob)
   use dsa = new ECDsaCng(k)
   dsa.VerifyData(data, signature)
 
