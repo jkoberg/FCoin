@@ -47,13 +47,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <Compile Include="Random.fs" />
     <Compile Include="Digest.fs" />
     <Compile Include="Radix.fs" />
     <Compile Include="Base58.fs" />
     <Compile Include="Magic.fs" />
     <Compile Include="Sign.fs" />
+    <Compile Include="Keystore.fs" />
     <Compile Include="Messages.fs" />
     <Compile Include="Network.fs" />
+    <Compile Include="Config.fs" />
+    <Compile Include="EcDsa.fs" />
+    <Compile Include="Vanity.fs" />
+    <Compile Include="Address.fs" />
+    <Compile Include="OpCode.fs" />
     <Compile Include="Main.fs" />
     <None Include="packages.config" />
   </ItemGroup>
