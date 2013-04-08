@@ -12,6 +12,10 @@ module BigEndian =
     |> Seq.skipWhile ((=) 0uy) 
     |> Array.ofSeq
 
+  let pad len (arr:byte[]) = 
+    let needed = len - arr.Length
+    if needed < 1 then arr 
+    else Array.append (Array.zeroCreate needed) arr
 
 type Encoder(digits:string)  =
   let radix = bigint digits.Length
