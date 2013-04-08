@@ -42,6 +42,8 @@
     <Content Include="Base58Feature.txt" />
     <Compile Include="Base58StepDefinitions.fs" />
     <Compile Include="Tests.fs" />
+    <Compile Include="EcDsaTests.fs" />
+    <Compile Include="BitcoinAddressTests.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FsCheck">
