@@ -24,6 +24,7 @@ let main argv =
     let x = System.Console.ReadLine()
     let solution_privkey = Conv.UnsignedBig.fromHex x
     let new_privkey = step_1_privkey + solution_privkey % EcDsa.secp256k1.n
+    printfn "Your new private key: %s" (Conv.Bitcoin.toWalletImportFormat secret_vanity_privkey)
+    printfn "And Address: %s" (Conv.Bitcoin.toAddressFormat secret_vanity_privkey)
 
-    printfn "Your new private key: %s\nAnd address: %s" (Conv.Address.toWalletImportFormat new_privkey) (Conv.Address.toAddressFormat new_privkey)
     0

@@ -20,9 +20,9 @@ module SampleAddressTests =
                 | None -> failwith "Bad privkey base58"
                 | Some (privmagic, privdata) ->
                     let priv = Convert.BigEndian.toBigInt privdata
-                    let addr = Conv.Address.toAddressFormat priv
+                    let addr = Conv.Bitcoin.toAddressFormat priv
                     Assert.AreEqual(address, addr, "Failed to correctly generate address from privkey")
-                    Assert.AreEqual(privkey, Conv.Address.toWalletImportFormat (Convert.BigEndian.toBigInt privdata), "Failed to encode privkey as WIF")
+                    Assert.AreEqual(privkey, Conv.Bitcoin.toWalletImportFormat (Convert.BigEndian.toBigInt privdata), "Failed to encode privkey as WIF")
 
 
 

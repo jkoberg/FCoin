@@ -56,7 +56,7 @@
     <Compile Include="EcDsa.secp256k1.fs" />
     <Compile Include="Conv.fs" />
     <Compile Include="Conv.Base58.fs" />
-    <Compile Include="Conv.Address.fs" />
+    <Compile Include="Conv.Bitcoin.fs" />
     <Compile Include="OpCode.fs" />
     <Compile Include="Sign.fs" />
     <None Include="packages.config" />
