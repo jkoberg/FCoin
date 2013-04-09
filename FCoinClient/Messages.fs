@@ -28,8 +28,6 @@ type VariableLengthStr(len:bigint, arr:byte[]) =
     member this.length = len
     member this.string = arr
 
-
-
   let ToString (vs:VariableLengthStr) = 
     System.Text.Encoding.UTF8.GetString(vs.string)
 

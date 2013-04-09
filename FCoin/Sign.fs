@@ -15,10 +15,10 @@ let sign privatekey (data:byte[]) =
 
 
 let unpackPublic txt = 
-  match Base58.verifyBase58check txt with
+  match Conv.Base58.verifyBase58check txt with
   | Some (0x04uy, data) ->
-    let x = Radix.BigEndian.toBigInt data.[..31]
-    let y = Radix.BigEndian.toBigInt data.[32..]
+    let x = Convert.BigEndian.toBigInt data.[..31]
+    let y = Convert.BigEndian.toBigInt data.[32..]
     Some (x,y)
   | _ -> None
           

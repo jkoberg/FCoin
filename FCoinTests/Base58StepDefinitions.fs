@@ -16,7 +16,7 @@ module ``Encoding a byte array`` =
         payload <- pyld |> toUTF8
        
     let [<When>] ``base58check is applied`` () =  
-        encoded <- Base58.toBase58check version payload
+        encoded <- Conv.Base58.toBase58check version payload
 
     let [<Then>] ``the result is "(.*)"`` (s:string) =
         let matched = encoded = s  
@@ -31,7 +31,7 @@ module ``Verifiying an encoded string`` =
         encstr <- b58
        
     let [<When>] ``the string is verified`` () =  
-        result <- Base58.verifyBase58check encstr
+        result <- Conv.Base58.verifyBase58check encstr
 
     let [<Then>] ``it verifies and has version (.*) and payload "(.*)"`` (ver:byte, s:string) =
         match result with

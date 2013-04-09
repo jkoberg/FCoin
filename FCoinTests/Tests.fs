@@ -5,10 +5,10 @@ open NUnit.Framework
 module BigIntToByteArrayTests =
 
     let [<Test>] toBigInt () = 
-      Assert.True ((Radix.BigEndian.toBigInt "\x01\x00"B) = (bigint 256))
+      Assert.True ((Convert.BigEndian.toBigInt "\x01\x00"B) = (bigint 256))
 
     let [<Test>] fromBigInt () =
-      Assert.True ((Radix.BigEndian.fromBigInt (bigint 256)) = "\x01\x00"B)
+      Assert.True ((Convert.BigEndian.fromBigInt (bigint 256)) = "\x01\x00"B)
 
 module Base58Tests =
 
@@ -31,7 +31,7 @@ module Base58Tests =
             239uy, "Testnet Private key (for compressed pubkey)", "cNJFgo1driFnPcBdBX8BrJrpxchBWXwXCvNH5SoSkdcF6JXXwHMm"
             ]
         for expectedVersion, description, encodedString in examples do
-            match Base58.verifyBase58check encodedString with
+            match Conv.Base58.verifyBase58check encodedString with
             | Some (version, payload) ->
                 Assert.True((version=expectedVersion))
             | None ->

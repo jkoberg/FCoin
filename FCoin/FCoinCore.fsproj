@@ -6,11 +6,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>ccc76432-8336-4bdc-8fe5-8b717ededc3e</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>BitcoinF</RootNamespace>
-    <AssemblyName>FCoin</AssemblyName>
+    <AssemblyName>FCoinCore</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <Name>FCoin</Name>
+    <Name>FCoinCore</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,21 +47,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <Compile Include="Magic.fs" />
     <Compile Include="Random.fs" />
     <Compile Include="Digest.fs" />
-    <Compile Include="Radix.fs" />
-    <Compile Include="Base58.fs" />
-    <Compile Include="Magic.fs" />
-    <Compile Include="Sign.fs" />
-    <Compile Include="Keystore.fs" />
-    <Compile Include="Messages.fs" />
-    <Compile Include="Network.fs" />
-    <Compile Include="Config.fs" />
+    <Compile Include="Convert.fs" />
     <Compile Include="EcDsa.fs" />
-    <Compile Include="Vanity.fs" />
-    <Compile Include="Address.fs" />
+    <Compile Include="EcDsa.bpP160r1.fs" />
+    <Compile Include="EcDsa.secp256k1.fs" />
+    <Compile Include="Conv.fs" />
+    <Compile Include="Conv.Base58.fs" />
+    <Compile Include="Conv.Address.fs" />
     <Compile Include="OpCode.fs" />
-    <Compile Include="Main.fs" />
+    <Compile Include="Sign.fs" />
     <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>

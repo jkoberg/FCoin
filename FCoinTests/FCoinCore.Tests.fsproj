@@ -8,9 +8,9 @@
     <ProjectGuid>02aaa541-0338-43f6-96d5-c60b0b6be69d</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>FCoinTests</RootNamespace>
-    <AssemblyName>FCoinTests</AssemblyName>
+    <AssemblyName>FCoinCore.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <Name>FCoinTests</Name>
+    <Name>FCoinCore.Tests</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -65,8 +65,10 @@
       <HintPath>..\packages\TickSpec.1.0.0.1\lib\net40\TickSpec.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <ProjectReference Include="..\FCoin\FCoin.fsproj">
-      <Name>FCoin</Name>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FCoin\FCoinCore.fsproj">
+      <Name>FCoinCore</Name>
       <Project>{ccc76432-8336-4bdc-8fe5-8b717ededc3e}</Project>
       <Private>True</Private>
     </ProjectReference>

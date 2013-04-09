@@ -1,5 +1,8 @@
 ﻿module Magic
 
-let PublicKeyByte  = 0x04uy
+let EcDsaUncompressedPubKey  = 4uy
 
-let AddressByte = 0x00uy
+let BitcoinAddressVersion = 0uy
+
+let BitcoinPrivkeyVersion = 0x80uy
+

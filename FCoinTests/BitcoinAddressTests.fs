@@ -6,22 +6,23 @@ open NUnit.Framework
 
 module SampleAddressTests =
     let examples = [
-      ("1JzGJw28sJSJJyDxfAgnVNhhLSLqnbMSMG","5JSoYATm69sDX3qwyxau1EC38BQU6BYAn9p38HdrgXFkKF2tLmx")
-      ("13ZdTrzSxDnDdvqGvLzG3kSdByXSLGepos","5JdkR3BXCn7kL9Az432U1mGPT7o8kpwNxsX9vFeGcseapY8wo9Z")
-      ("18Mw4t4GbJeBBvUHep71RUwQByCeKPdR8p","5JjgKcw8aRdKnRTFs5drSo5z5ZyBYCSFWtZ29ELnCjdgAzH9qQq")
+      "1JzGJw28sJSJJyDxfAgnVNhhLSLqnbMSMG","5JSoYATm69sDX3qwyxau1EC38BQU6BYAn9p38HdrgXFkKF2tLmx"
+      "13ZdTrzSxDnDdvqGvLzG3kSdByXSLGepos","5JdkR3BXCn7kL9Az432U1mGPT7o8kpwNxsX9vFeGcseapY8wo9Z"
+      "18Mw4t4GbJeBBvUHep71RUwQByCeKPdR8p","5JjgKcw8aRdKnRTFs5drSo5z5ZyBYCSFWtZ29ELnCjdgAzH9qQq"
       ]
 
     let [<Test>] CheckSamples () = 
         for address, privkey in examples do
-            match Base58.verifyBase58check address with
+            match Conv.Base58.verifyBase58check address with
             | None -> failwith "Bad address base58"
             | Some (addrmagic, addrdata) ->
-                match Base58.verifyBase58check privkey with
+                match Conv.Base58.verifyBase58check privkey with
                 | None -> failwith "Bad privkey base58"
                 | Some (privmagic, privdata) ->
-                    let priv = Radix.BigEndian.toBigInt privdata
-                    let addr = Address.toAddressFormat priv
+                    let priv = Convert.BigEndian.toBigInt privdata
+                    let addr = Conv.Address.toAddressFormat priv
                     Assert.AreEqual(address, addr, "Failed to correctly generate address from privkey")
+                    Assert.AreEqual(privkey, Conv.Address.toWalletImportFormat (Convert.BigEndian.toBigInt privdata), "Failed to encode privkey as WIF")
 
 
 
