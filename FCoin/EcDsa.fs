@@ -63,4 +63,4 @@ let newPrivKey n : PrivateKey =
     let bytes = Random.bytes 32 |> Array.append [|0uy|] 
     (bigint bytes) % n
 
-let getPubKey  (c:Curve) g (p:bigint) : PublicKey = multiply c p g
+let getPubKey  (c:Curve) g (p:PrivateKey) : PublicKey = multiply c p g
