@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FCoinCore", "FCoin\FCoinCore.fsproj", "{CCC76432-8336-4BDC-8FE5-8B717EDEDC3E}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FCoinTests", "FCoinTests\FCoinTests.fsproj", "{02AAA541-0338-43F6-96D5-C60B0B6BE69D}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FCoinCore.Tests", "FCoinTests\FCoinCore.Tests.fsproj", "{02AAA541-0338-43F6-96D5-C60B0B6BE69D}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "VanityTool", "VanityTool\VanityTool.fsproj", "{A97DD594-4A4F-419E-B91E-DA3486E2A95D}"
 EndProject
