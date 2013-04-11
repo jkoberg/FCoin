@@ -5,11 +5,7 @@ type Curve = {p: bigint; a: bigint;  b: bigint}
 type PrivateKey = bigint
 type PublicKey = Point
 
-let (%) x m =
-    if x < 0I then
-        (x % m) + m
-    else
-        x % m
+let (%) x m = if x < 0I then (x % m) + m else x % m
 
 let rec egcd a b = 
     if b = 0I then (a, 1I, 0I) else
@@ -40,27 +36,24 @@ let add (c: Curve) pj pk =
     | j, k when j = k -> double c j
     | Point(x1, y1), Point(x2, y2) when x1 = x2 && y1 = -y2 -> PointO
     | Point(xj, yj), Point(xk, yk) ->
-        let lam = modDiv ((yj - yk) % c.p) ((xj - xk) % c.p) c.p
-        let xr = ((lam ** 2) - xj - xk) % c.p
-        let yr = ((lam * (xj - xr)) - yj) % c.p
+        let l = modDiv ((yj - yk) % c.p) ((xj - xk) % c.p) c.p
+        let xr = ((l ** 2) - xj - xk) % c.p
+        let yr = ((l * (xj - xr)) - yj) % c.p
         Point(xr, yr)
 
 let rec multiply curve (n:bigint) point =
-    if n.IsZero then PointO else
-    if n.IsEven
-    then multiply curve (n / 2I) (double curve point)
-    else add curve point (multiply curve (n - 1I) point)
+    if n.IsZero 
+      then PointO 
+      else if n.IsEven
+        then multiply curve (n / 2I) (double curve point)
+        else add curve point (multiply curve (n - 1I) point)
 
 let onCurve (c: Curve) pt = 
     match pt with
     | PointO -> true
     | Point(x,y) ->
-        let q = bigint.ModPow(y, 2I, c.p)
-        let qq = (bigint.ModPow(x, 3I, c.p) + (c.a * x) + c.b) % c.p
-        q = qq
+        bigint.ModPow(y, 2I, c.p)  =  (bigint.ModPow(x, 3I, c.p) + (c.a * x) + c.b) % c.p
 
-let newPrivKey n : PrivateKey =
-    let bytes = Random.bytes 32 |> Array.append [|0uy|] 
-    (bigint bytes) % n
+let newPrivKey n : PrivateKey = (Random.bytes 32 |> Conv.Bytes.toBigInt) % n
 
 let getPubKey  (c:Curve) g (p:PrivateKey) : PublicKey = multiply c p g

@@ -16,11 +16,3 @@ module ECCSignatureTests =
       Assert.True (bpP160r1.onCurve pub)
       Assert.True (bpP160r1.onCurve (bpP160r1.multiply priv bpP160r1.G))
 
-    let [<Test>] OnCurve2 () =
-      Assert.True (bpP160r1.onCurve pub)
-      Assert.True (bpP160r1.onCurve (bpP160r1.multiply priv bpP160r1.G))
-
-    let [<Test>] OnCurve3 () =
-      Assert.True (bpP160r1.onCurve pub)
-      Assert.True (bpP160r1.onCurve (bpP160r1.multiply priv bpP160r1.G))
-
