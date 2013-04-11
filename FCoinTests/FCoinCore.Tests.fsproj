@@ -38,10 +38,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="app.config" />
-    <Compile Include="Fixtures.fs" />
-    <Content Include="Base58Feature.txt" />
-    <Compile Include="Base58StepDefinitions.fs" />
-    <Compile Include="Tests.fs" />
+    <Compile Include="ConvTests.fs" />
     <Compile Include="EcDsaTests.fs" />
     <Compile Include="BitcoinAddressTests.fs" />
   </ItemGroup>
@@ -61,10 +58,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
-    <Reference Include="TickSpec">
-      <HintPath>..\packages\TickSpec.1.0.0.1\lib\net40\TickSpec.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FCoin\FCoinCore.fsproj">

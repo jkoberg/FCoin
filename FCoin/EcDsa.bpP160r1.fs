@@ -1,7 +1,7 @@
 ﻿module EcDsa.bpP160r1
 
 open EcDsa.Arith
-open Convert.BigEndian
+open Conv.UnsignedBig
 
 let size = 256
 let a = fromHex "340E7BE2 A280EB74 E2BE61BA DA745D97 E8F7C300"

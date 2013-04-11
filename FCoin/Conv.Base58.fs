@@ -29,10 +29,10 @@ type RadixEncoder(digits:string)  =
   member this.zeroDigit = zero
 
   member this.FromBytes (bytes:byte[]) =
-    bytes |> Convert.BigEndian.toBigInt |> fromBigInt
+    bytes |> Conv.Bytes.toBigInt |> fromBigInt
   
   member this.ToBytes (repr:string) =
-    repr |> toBigInt |> Convert.BigEndian.fromBigInt
+    repr |> toBigInt |> Conv.UnsignedBig.toBytes
 
 
 let chars = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"

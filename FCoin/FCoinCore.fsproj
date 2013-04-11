@@ -50,11 +50,10 @@
     <Compile Include="Magic.fs" />
     <Compile Include="Random.fs" />
     <Compile Include="Digest.fs" />
-    <Compile Include="Convert.fs" />
+    <Compile Include="Conv.fs" />
     <Compile Include="EcDsa.fs" />
     <Compile Include="EcDsa.bpP160r1.fs" />
     <Compile Include="EcDsa.secp256k1.fs" />
-    <Compile Include="Conv.fs" />
     <Compile Include="Conv.Base58.fs" />
     <Compile Include="Conv.Bitcoin.fs" />
     <Compile Include="OpCode.fs" />

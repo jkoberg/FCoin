@@ -3,7 +3,7 @@
 open EcDsa.Arith
 open EcDsa
 
-open Convert.BigEndian
+open Conv.Bytes
 
 let toAddressFormat (privkey:PrivateKey) =
   match secp256k1.getPubKey privkey with

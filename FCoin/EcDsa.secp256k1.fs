@@ -1,7 +1,7 @@
 ﻿module EcDsa.secp256k1
 
 open EcDsa.Arith
-open Convert.BigEndian
+open Conv.UnsignedBig
 
 let size = 256
 let p = fromHex "FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE FFFFFC2F"

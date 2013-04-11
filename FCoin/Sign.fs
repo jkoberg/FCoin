@@ -17,8 +17,8 @@ let sign privatekey (data:byte[]) =
 let unpackPublic txt = 
   match Conv.Base58.verifyBase58check txt with
   | Some (0x04uy, data) ->
-    let x = Convert.BigEndian.toBigInt data.[..31]
-    let y = Convert.BigEndian.toBigInt data.[32..]
+    let x = Conv.UnsignedBig.fromBytes data.[..31]
+    let y = Conv.UnsignedBig.fromBytes data.[32..]
     Some (x,y)
   | _ -> None
           
