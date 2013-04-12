@@ -13,14 +13,15 @@ module SampleAddressTests =
 
     let [<Test>] CheckSamples () = 
         for address, privkey in examples do
-            match Conv.Base58.verifyBase58check address with
+            match Conv.Base58.verify address with
             | None -> failwith "Bad address base58"
             | Some (addrmagic, addrdata) ->
-                match Conv.Base58.verifyBase58check privkey with
+                match Conv.Base58.verify privkey with
                 | None -> failwith "Bad privkey base58"
                 | Some (privmagic, privdata) ->
                     let priv = Conv.UnsignedBig.fromBytes privdata
-                    let addr = Conv.Bitcoin.toAddressFormat priv
+                    let pub = EcDsa.secp256k1.getPubKey priv
+                    let addr = Conv.Bitcoin.toAddressFormat pub
                     Assert.AreEqual(address, addr, "Failed to correctly generate address from privkey")
                     Assert.AreEqual(privkey, Conv.Bitcoin.toWalletImportFormat (Conv.UnsignedBig.fromBytes privdata), "Failed to encode privkey as WIF")
 

@@ -46,19 +46,11 @@
     <Reference Include="System.Security" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <Compile Include="Magic.fs" />
-    <Compile Include="Random.fs" />
-    <Compile Include="Digest.fs" />
+    <Compile Include="Crypto.fs" />
     <Compile Include="Conv.fs" />
-    <Compile Include="EcDsa.fs" />
-    <Compile Include="EcDsa.bpP160r1.fs" />
-    <Compile Include="EcDsa.secp256k1.fs" />
     <Compile Include="Conv.Base58.fs" />
+    <Compile Include="EcDsa.fs" />
     <Compile Include="Conv.Bitcoin.fs" />
-    <Compile Include="OpCode.fs" />
-    <Compile Include="Sign.fs" />
-    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

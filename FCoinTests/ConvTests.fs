@@ -75,13 +75,13 @@ module ConvBase58Tests =
         239uy, "Testnet Private key (for compressed pubkey)", "cNJFgo1driFnPcBdBX8BrJrpxchBWXwXCvNH5SoSkdcF6JXXwHMm"
         ]
     for expectedVersion, description, encodedString in examples do
-        match verifyBase58check encodedString with
+        match verify encodedString with
         | Some (version, payload) ->
             Assert.True((version=expectedVersion))
         | None ->
             Assert.Fail("failed verifying base58 string ({0}) {1} ", description, encodedString)  
 
-  let [<Test>] toBase58Check () = 
+  let [<Test>] toBase58check () = 
     let shouldbe = "5K5zGnFRJAD3viw93hPQLq5Fa3xsLFGYC9yoGMcmVdS1CEaKYs7" 
     let is = "a7593394a809fe36b10fb3203480dd789fd12e771b07e3df50b37080714f1d2e" |> Conv.Hex.toBytes |> toBase58check 0x80uy
     shouldbe =?= is
@@ -95,4 +95,4 @@ module ConvBitcoinTests =
     "5K5zGnFRJAD3viw93hPQLq5Fa3xsLFGYC9yoGMcmVdS1CEaKYs7" =?=  toWalletImportFormat priv
 
   let [<Test>] toAddressFormat () =
-    "1G3zNdwLDQ5Bgcd7axEmJ4LFEJkPPWpEaN" =?= ("5J8LsrnPk9SqwntTvawwGbaSMxpjkVtVUVZCHoNwiG2TcZ2Ca4q" |> fromWalletImportFormat |> toAddressFormat)
+    "1G3zNdwLDQ5Bgcd7axEmJ4LFEJkPPWpEaN" =?= ("5J8LsrnPk9SqwntTvawwGbaSMxpjkVtVUVZCHoNwiG2TcZ2Ca4q" |> fromWalletImportFormat |> EcDsa.secp256k1.getPubKey |> toAddressFormat)

@@ -1,25 +1,22 @@
 ﻿module Conv.Bitcoin
 
-open EcDsa.Arith
 open EcDsa
-
+open Crypto
 open Conv.Bytes
+open Conv.Base58
 
-let toAddressFormat (privkey:PrivateKey) =
-  match secp256k1.getPubKey privkey with
+let toUncompressedPubKey (pubkey:PublicKey) = 
+  match pubkey with
   | PointO -> failwith "Bad privkey"
-  | Point(px,py) ->
-    let xbytes = fromBigInt px |> pad 32
-    let ybytes = fromBigInt py |> pad 32
-    let bytes = Array.concat [[|Magic.EcDsaUncompressedPubKey|]; xbytes; ybytes]
-    bytes |> Digest.sha256 |> Digest.ripemd160 |> Base58.toBase58check Magic.BitcoinAddressVersion
+  | Point(px,py) -> "\x04"B ++ uint256 px ++ uint256 py
 
+let toPubKeyHex = toUncompressedPubKey >> Conv.Hex.fromBytes
 
-let toWalletImportFormat (privkey:PrivateKey) =
-  let keybytes = fromBigInt privkey |> pad 32
-  keybytes |> Base58.toBase58check Magic.BitcoinPrivkeyVersion
+let toAddressFormat = toUncompressedPubKey >> sha256 >> ripemd160 >> toBase58check 0uy
+
+let toWalletImportFormat  = uint256 >> toBase58check 0x80uy
 
 let fromWalletImportFormat wif : PrivateKey =
-  match Base58.verifyBase58check wif with
-  | None -> failwith "Bad import string"
+  match Base58.verify wif with
   | Some (version, payload) -> toBigInt payload
+  | None -> failwith (sprintf "Bad wallet import string: %s" wif)
