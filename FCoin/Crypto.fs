@@ -22,6 +22,7 @@ let randBytes count =
   out
 
 let randBits bitcount =
-  let bytecount = int (ceil (float bitcount)/8.)
+  let bytecount = int (ceil ((float bitcount) / 8.))
+  let mask = (1I <<< bitcount) - 1I
   let le = randBytes bytecount |> Array.append "\x00"B
-  bigint le
+  (bigint le) &&& mask
