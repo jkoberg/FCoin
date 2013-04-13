@@ -7,11 +7,11 @@ type PublicKey = Point
 
 let (%) x m = if x < 0I then (x % m) + m else x % m
 
-let rec egcd a b = 
-    if b = 0I then (a, 1I, 0I) else
-    let q, r = bigint.DivRem(a, b)
-    let d, s, t = egcd b r
-    (d, t, s - (q * t))
+let rec egcd n1 n2 = 
+    if n2 = 0I then (n1, 1I, 0I) else
+    let quo, rem = bigint.DivRem(n1, n2)
+    let d, s, t = egcd n2 rem
+    (d, t, s - (quo * t))
 
 let modInv a m =
     match egcd a m with
@@ -25,21 +25,21 @@ let double (c: Curve) p =
     | PointO -> PointO
     | Point(x, y) ->
         let l = modDiv ((3I * (x ** 2)) + c.a) (2I * y) c.p
-        let xr = ((l ** 2) - (2I * x)) % c.p
-        let yr = ((l * (x - xr)) - y) % c.p
-        Point(xr, yr)
+        let newx = ((l ** 2) - (2I * x)) % c.p
+        let newy = ((l * (x - newx)) - y) % c.p
+        Point(newx, newy)
 
-let add (c: Curve) pj pk =
-    match pj, pk with
-    | PointO, k  -> k
-    | j, PointO  -> j
-    | j, k when j = k -> double c j
+let add (c: Curve) p1 p2 =
+    match p1, p2 with
+    | PointO, p2  -> p2
+    | p1, PointO  -> p1
+    | p1, p2 when p1 = p2 -> double c p1
     | Point(x1, y1), Point(x2, y2) when x1 = x2 && y1 = -y2 -> PointO
-    | Point(xj, yj), Point(xk, yk) ->
-        let l = modDiv ((yj - yk) % c.p) ((xj - xk) % c.p) c.p
-        let xr = ((l ** 2) - xj - xk) % c.p
-        let yr = ((l * (xj - xr)) - yj) % c.p
-        Point(xr, yr)
+    | Point(x1, y1), Point(x2, y2) ->
+        let l = modDiv ((y1 - y2) % c.p) ((x1 - x2) % c.p) c.p
+        let newx = ((l ** 2) - x1 - x2) % c.p
+        let newy = ((l * (x1 - newx)) - y1) % c.p
+        Point(newx, newy)
 
 let rec multiply curve (n:bigint) point =
     if n.IsZero 
@@ -76,4 +76,5 @@ module secp256k1 =
 
     let rec newPrivKey () : PrivateKey = 
       let r = Crypto.randBits size
-      if r < p then r else newPrivKey()
+      if r < n then r else newPrivKey()
+
