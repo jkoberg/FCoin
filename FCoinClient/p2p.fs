@@ -33,7 +33,7 @@ type Server() =
     
     let rec loop() = async {
       printfn "Waiting for request ..."
-      let! socket = listener.AsyncAccept()
+      let socket = listener.Accept()
       // Setting ownsSocket to false allows us to later re-use a socket.
       let stream = new NetworkStream(socket, false) 
       printfn "Received request"

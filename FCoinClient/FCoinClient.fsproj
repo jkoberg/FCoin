@@ -50,6 +50,7 @@
     <Compile Include="Messages.fs" />
     <Compile Include="Config.fs" />
     <Compile Include="Network.fs" />
+    <Compile Include="p2p.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
