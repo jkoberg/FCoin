@@ -2,10 +2,6 @@
 
 open Conv.Bytes
 
-let countLeading item = Seq.takeWhile ((=) item) >> Seq.length
-let hashOf = Crypto.sha256 >> Crypto.sha256
-let checksum x = (hashOf x).[..3]
-
 type RadixEncoder(digits:string)  =
   let radix = bigint digits.Length
   let zero = digits.[0]
@@ -31,7 +27,7 @@ type RadixEncoder(digits:string)  =
     fromRadix (bigint 0) (List.ofSeq rep)
   
   member this.FromBytes (bytes:byte[]) =
-    bytes |> Bytes.toBigInt |> fromBigInt
+    bytes |> UnsignedBig.fromBytes |> fromBigInt
 
   member this.ToBytes (repr:string) =
     repr |> toBigInt |> UnsignedBig.toBytes
@@ -39,23 +35,29 @@ type RadixEncoder(digits:string)  =
   member this.zeroDigit = zero
 
 
-let encode = RadixEncoder("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz")
+let radix58 = RadixEncoder("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz")
+
+let countLeading item = Seq.takeWhile ((=) item) >> Seq.length
+let hashOf = Crypto.sha256 >> Crypto.sha256
+let checksum x = (hashOf x).[..3]
+
 
 let toBase58check (version:byte) (payload:byte[]) =
   let body = [|version|] ++ payload
   let checksummed = body ++ (checksum body)
   let zeroCount = checksummed |> countLeading 0uy
-  let strippedB58 = encode.FromBytes checksummed
-  new string(Array.create zeroCount encode.zeroDigit) + strippedB58
+  let strippedB58 = radix58.FromBytes checksummed
+  let zeros = new string(Array.create zeroCount radix58.zeroDigit) 
+  zeros + strippedB58
+
 
 let verify (encoded:string) =
-  let zeroCount = encoded |> countLeading encode.zeroDigit
+  let zeroCount = encoded |> countLeading radix58.zeroDigit
   let strippedB58 = encoded.[zeroCount..]
-  let checksummed = (Array.zeroCreate zeroCount) ++ (encode.ToBytes strippedB58)
+  let checksummed = (Array.zeroCreate zeroCount) ++ (radix58.ToBytes strippedB58)
   let csumidx = checksummed.Length - 4
   let body, csum = checksummed.[..(csumidx-1)], checksummed.[csumidx..]
   if csum <> (checksum body) then None else
   let version = body.[0]
   let payload = body.[1..]
   Some (version, payload)
-
