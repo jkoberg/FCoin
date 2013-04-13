@@ -23,10 +23,16 @@ module ConvHexTests =
 
   let [<Test>] toBigInt ()=
     0I =?= toBigInt "00"
+    0I =?= toBigInt "0"
     1I =?= toBigInt "01"
+    1I =?= toBigInt "1"
+    1I =?= toBigInt "001"
     16I =?= toBigInt "10"
+    16I =?= toBigInt "010"
     255I =?= toBigInt "FF"
+    255I =?= toBigInt "000FF"
     256I =?= toBigInt "0100"
+    256I =?= toBigInt "100"
     65535I =?= toBigInt "FFFF"
     256I =?= toBigInt "01 00"
     65535I =?= toBigInt "FF FF"
