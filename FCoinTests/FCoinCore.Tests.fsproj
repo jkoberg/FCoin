@@ -39,6 +39,8 @@
     <None Include="packages.config" />
     <None Include="app.config" />
     <Compile Include="ConvTests.fs" />
+    <Compile Include="KeyHandling.fs" />
+    <Compile Include="SignatureTests.fs" />
     <Compile Include="BitcoinAddressTests.fs" />
   </ItemGroup>
   <ItemGroup>
