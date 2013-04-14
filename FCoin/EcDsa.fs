@@ -10,6 +10,8 @@ type MaybeError<'a> =
 
 let (%) x m = if x < 0I then (x % m) + m else x % m
 
+let pow = bigint.ModPow
+
 let rec egcd n1 n2 = 
     if n2 = 0I then (n1, 1I, 0I) else
     let quo, rem = bigint.DivRem(n1, n2)
@@ -56,19 +58,18 @@ let rec multiply curve (n:bigint) point =
 let onCurve (c: Curve) pt = 
     match pt with
     | PointO -> true
-    | Point(x,y) ->
-        bigint.ModPow(y, 2I, c.p)  =  (bigint.ModPow(x, 3I, c.p) + (c.a * x) + c.b) % c.p
+    | Point(x,y) -> pow(y, 2I, c.p)  =  (pow(x, 3I, c.p) + (c.a * x) + c.b) % c.p
 
 let fromCompressed (c:Curve) isYOdd (x:bigint) : PublicKey = 
-    let ySquared = (bigint.ModPow(x, 3I, c.p)  +  c.a * bigint.ModPow(x, 2I, c.p)  +  c.b) % c.p
-    let ytrial = bigint.ModPow(ySquared, ((c.p+1I) / 4I), c.p)
-    let y = if isYOdd = ytrial.IsEven then c.p - ytrial else ytrial
-    Point(x, y)
+    let ySquared = (pow(x, 3I, c.p)  +  c.a * pow(x, 2I, c.p)  +  c.b) % c.p
+    let ytrial = pow(ySquared, ((c.p+1I) / 4I), c.p)
+    if isYOdd = ytrial.IsEven
+    then Point(x, c.p - ytrial)
+    else Point(x, ytrial)
 
 let rec newPrivKey (c:Curve) : PrivateKey = 
     let r = Crypto.randBits c.size
     if r > 0I && r < c.n then r else newPrivKey c
-
 
 let getPubKey c k : PublicKey = multiply c k c.G
 
@@ -101,7 +102,7 @@ let verify (c:Curve) pubkey hash (r,s) =
     match add c (multiply c u1 c.G) (multiply c u2 pubkey) with
     | PointO -> Error "Signature didn't match"
     | Point(x1, _) when r <> (x1 % c.n) -> Error "Signature didn't match"
-    | _ -> Valid hash
+    | _ as p -> Valid p
 
 
 
