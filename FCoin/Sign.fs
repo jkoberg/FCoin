@@ -22,7 +22,7 @@ let verify_message addr msg sigb64  =
   let compressed, recid = if nV >= 31 then (true, nV-4-27) else (false, nV-27)
   let x = r + (((bigint recid) / 2I) * secp256k1.n)
   let yIsOdd = (recid &&& 0x01) = 1
-  let R = secp256k1.fromCompressed yIsOdd x
+  let _, R = secp256k1.fromCompressed yIsOdd x
   let minus_e = secp256k1.n - msghash
   let inv_r = modInv r secp256k1.n
   let Q = secp256k1.multiply inv_r (
@@ -33,16 +33,16 @@ let verify_message addr msg sigb64  =
   match secp256k1.verify Q msghash (r,s) with
   | Error err -> Error err
   | Valid p -> 
-    let senderAddr = toAddress compressed Q
+    let senderAddr = pubToAddress (compressed,Q)
     if addr <> senderAddr
     then Error "Invalid signature"
     else Valid senderAddr
 
 let firstOf items = items |> Seq.find Option.isSome |> Option.get
 
-let sign_message (privkey:PrivateKey) compressed message =
-  let pubkey = secp256k1.getPubKey privkey
-  let myaddress = toAddress compressed pubkey
+let sign_message ((cmp,privkey):PrivateKey) compressed message =
+  let pubkey = secp256k1.getPubKey (cmp,privkey)
+  let myaddress = pubToAddress pubkey
   let msghash = (hashMagic message)
   let r,s = secp256k1.sign privkey (hashMagic message)
   let sigbytes = (uint256 r) ++ (uint256 s)

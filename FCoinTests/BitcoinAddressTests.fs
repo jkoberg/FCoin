@@ -20,11 +20,11 @@ module SampleAddressTests =
                 match Base58.verify privkey with
                 | None -> failwith "Bad privkey base58"
                 | Some (privmagic, privdata) ->
-                    let priv = UnsignedBig.fromBytes privdata
+                    let priv = false, UnsignedBig.fromBytes privdata
                     let pub = EcDsa.secp256k1.getPubKey priv
-                    let addr = Bitcoin.toAddressFormat pub
+                    let addr = Bitcoin.pubToAddress pub
                     Assert.AreEqual(address, addr, "Failed to correctly generate address from privkey")
-                    Assert.AreEqual(privkey, Bitcoin.toWalletImportFormat (UnsignedBig.fromBytes privdata), "Failed to encode privkey as WIF")
+                    Assert.AreEqual(privkey, Bitcoin.toWalletImportFormat priv, "Failed to encode privkey as WIF")
 
 
 

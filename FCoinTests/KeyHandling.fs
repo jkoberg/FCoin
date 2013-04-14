@@ -10,23 +10,26 @@ module KeyHandlingTests =
 
 
   let [<Test>] fromCompressed () =
-    let privkey, pubkey, r = newKeypair()
+    let privkey, pubkey, r = newKeypair false
 
-    let uncompressed = toUncompressedPubKey pubkey
+    let uncompressed = encodePubkey pubkey
     let newpub2 = fromEncodedPubkey uncompressed
     Assert.AreEqual(pubkey, newpub2, "didn't encode or decode to uncompressed correctly")
 
-    let compressed = toCompressedPubkey pubkey
+    
+    let privkey, pubkey, r = newKeypair true
+
+    let compressed = encodePubkey pubkey
     let newpub1 = fromEncodedPubkey compressed
     if newpub1 <> pubkey
       then Assert.Fail(sprintf "didn't decode %s\nto %s\ninstead got %s\n privkey %s"
                           (compressed |> Conv.Hex.fromBytes)
-                          (pubkey |> toUncompressedPubKey |> Conv.Hex.fromBytes)
-                          (newpub1 |> toUncompressedPubKey |> Conv.Hex.fromBytes)
-                          (privkey |> Conv.UnsignedBig.toHex)
+                          (pubkey |> encodePubkey |> Conv.Hex.fromBytes)
+                          (newpub1 |> encodePubkey |> Conv.Hex.fromBytes)
+                          (privkey |> encodePrivKey |> Conv.Bytes.toHex)
 
           )
-      else Assert.Pass(sprintf "unpacked compressed pubkey %s to %s" (compressed |> Conv.Hex.fromBytes) (newpub1 |> toUncompressedPubKey |> Conv.Hex.fromBytes))
+      else Assert.Pass(sprintf "unpacked compressed pubkey %s to %s" (compressed |> Conv.Hex.fromBytes) (newpub1 |> encodePubkey |> Conv.Hex.fromBytes))
 
 
 

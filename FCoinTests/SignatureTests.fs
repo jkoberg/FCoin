@@ -14,13 +14,15 @@ open Sign
 module SignatureTests = 
   open EcDsa.secp256k1
 
-  let myPrivkey, myPubkey, r = newKeypair()
+  let myPrivkey, myPubkey, r = newKeypair false
   let message = "Hello There!"B
   let hash = message |> sha256 |> sha256 |> Conv.UnsignedBig.fromBytes
 
   let [<Test>] sign () =
-    let r,s = sign myPrivkey hash
-    match verify myPubkey hash (r,s) with
+    let _, privkey = myPrivkey
+    let _, pubkey = myPubkey
+    let r,s = sign privkey hash
+    match verify pubkey hash (r,s) with
     | EcDsa.Error msg -> Assert.Fail(msg)
     | EcDsa.Valid payload -> Assert.Pass(sprintf "good payload of hash %A" (payload))
 
@@ -43,7 +45,7 @@ module SignatureTests =
   let [<Test>] example3 () =
     let msg = "test 12345"B
     let signature = sign_message myPrivkey false msg 
-    let myAddr = toAddress false myPubkey
+    let myAddr = pubToAddress myPubkey
     printfn "My address %s" myAddr
     printfn "message: test 12345"
     printfn "sig: %s" signature

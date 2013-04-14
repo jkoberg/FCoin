@@ -2,8 +2,8 @@
 
 type Point = PointO | Point of  bigint * bigint
 type Curve = {a:bigint; b:bigint; p:bigint; G:Point; n:bigint; h:bigint; size:int}
-type PrivateKey = bigint
-type PublicKey = Point
+type PrivateKey = bool * bigint
+type PublicKey = bool * Point
 type MaybeError<'a> = 
       | Valid of 'a
       | Error of string
@@ -64,25 +64,25 @@ let fromCompressed (c:Curve) isYOdd (x:bigint) : PublicKey =
     let ySquared = (pow(x, 3I, c.p)  +  c.a * pow(x, 2I, c.p)  +  c.b) % c.p
     let ytrial = pow(ySquared, ((c.p+1I) / 4I), c.p)
     if isYOdd = ytrial.IsEven
-    then Point(x, c.p - ytrial)
-    else Point(x, ytrial)
+    then true, Point(x, c.p - ytrial)
+    else true, Point(x, ytrial)
 
-let rec newPrivKey (c:Curve) : PrivateKey = 
+let rec newPrivKey (c:Curve) compressed : PrivateKey = 
     let r = Crypto.randBits c.size
-    if r > 0I && r < c.n then r else newPrivKey c
+    if r > 0I && r < c.n then (compressed, r) else newPrivKey c compressed
 
-let getPubKey c k : PublicKey = multiply c k c.G
+let getPubKey c ((compressed,k):PrivateKey) : PublicKey = (compressed, multiply c k c.G)
 
-let rec newKeypair c =
-    let k = newPrivKey c
+let rec newKeypair c compressed =
+    let k = newPrivKey c compressed
     match getPubKey c k with
-    | PointO -> newKeypair c
-    | Point(r,_) when r % c.n = 0I -> newKeypair c
-    | Point(r,_) as kG -> (k, kG, r)
+    | _, PointO -> newKeypair c compressed
+    | _, Point(r,_) when r % c.n = 0I -> newKeypair c compressed
+    | _, Point(r,_) as kG -> (k, kG, r)
 
 let rec sign (c:Curve) privkey hash = 
     let z = hash
-    let k, kG, r = newKeypair c
+    let (_,k), (_,kG), r = newKeypair c false
     let s = ((modInv k c.n) * ((z + ((r * privkey)%c.n))%c.n) ) % c.n
     if s = 0I then sign c privkey hash else
     (r, s)
@@ -125,8 +125,8 @@ module secp256k1 =
     let multiply = multiply curve
     let onCurve = onCurve curve
     let fromCompressed = fromCompressed curve
-    let newPrivKey () = newPrivKey curve
+    let newPrivKey compressed = newPrivKey curve compressed
     let getPubKey = getPubKey curve
-    let newKeypair () = newKeypair curve
+    let newKeypair compressed  = newKeypair curve compressed
     let sign = sign curve
     let verify = verify curve
