@@ -45,7 +45,7 @@ module SignatureTests =
   let [<Test>] example3 () =
     let msg = "test 12345"B
     let signature = sign_message myPrivkey false msg 
-    let myAddr = pubToAddress myPubkey
+    let myAddr = Pubkey.toAddress myPubkey
     printfn "My address %s" myAddr
     printfn "message: test 12345"
     printfn "sig: %s" signature

@@ -12,24 +12,24 @@ module KeyHandlingTests =
   let [<Test>] fromCompressed () =
     let privkey, pubkey, r = newKeypair false
 
-    let uncompressed = encodePubkey pubkey
-    let newpub2 = fromEncodedPubkey uncompressed
+    let uncompressed = Pubkey.toBytes pubkey
+    let newpub2 = Pubkey.fromBytes uncompressed
     Assert.AreEqual(pubkey, newpub2, "didn't encode or decode to uncompressed correctly")
 
     
     let privkey, pubkey, r = newKeypair true
 
-    let compressed = encodePubkey pubkey
-    let newpub1 = fromEncodedPubkey compressed
+    let compressed = Pubkey.toBytes pubkey
+    let newpub1 = Pubkey.fromBytes compressed
     if newpub1 <> pubkey
       then Assert.Fail(sprintf "didn't decode %s\nto %s\ninstead got %s\n privkey %s"
                           (compressed |> Conv.Hex.fromBytes)
-                          (pubkey |> encodePubkey |> Conv.Hex.fromBytes)
-                          (newpub1 |> encodePubkey |> Conv.Hex.fromBytes)
-                          (privkey |> encodePrivKey |> Conv.Bytes.toHex)
+                          (pubkey |> Pubkey.toHex)
+                          (newpub1 |> Pubkey.toHex )
+                          (privkey |> Privkey.toHex )
 
           )
-      else Assert.Pass(sprintf "unpacked compressed pubkey %s to %s" (compressed |> Conv.Hex.fromBytes) (newpub1 |> encodePubkey |> Conv.Hex.fromBytes))
+      else Assert.Pass(sprintf "unpacked compressed pubkey %s to %s" (compressed |> Conv.Hex.fromBytes) (newpub1 |> Pubkey.toHex))
 
 
 

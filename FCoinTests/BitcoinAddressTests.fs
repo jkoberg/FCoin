@@ -6,6 +6,8 @@ open Conv
 open NUnit.Framework
 
 module SampleAddressTests =
+
+
     let examples = [
       "1JzGJw28sJSJJyDxfAgnVNhhLSLqnbMSMG","5JSoYATm69sDX3qwyxau1EC38BQU6BYAn9p38HdrgXFkKF2tLmx"
       "13ZdTrzSxDnDdvqGvLzG3kSdByXSLGepos","5JdkR3BXCn7kL9Az432U1mGPT7o8kpwNxsX9vFeGcseapY8wo9Z"
@@ -22,9 +24,9 @@ module SampleAddressTests =
                 | Some (privmagic, privdata) ->
                     let priv = false, UnsignedBig.fromBytes privdata
                     let pub = EcDsa.secp256k1.getPubKey priv
-                    let addr = Bitcoin.pubToAddress pub
+                    let addr = Bitcoin.Pubkey.toAddress pub
                     Assert.AreEqual(address, addr, "Failed to correctly generate address from privkey")
-                    Assert.AreEqual(privkey, Bitcoin.toWalletImportFormat priv, "Failed to encode privkey as WIF")
+                    Assert.AreEqual(privkey, Bitcoin.Privkey.toWalletImportFormat priv, "Failed to encode privkey as WIF")
 
 
 

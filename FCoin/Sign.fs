@@ -8,8 +8,7 @@ open Conv.Bitcoin
 let messageMagic (message:byte[]) = 
   "\x18Bitcoin Signed Message:\n"B ++ [| byte message.Length |] ++ message
 
-let hashMagic = 
-  messageMagic >> sha256 >> sha256 >> toBigInt
+let hashMagic = messageMagic >> sha256 >> sha256 >> toBigInt
 
 let verify_message addr msg sigb64  =
   let msghash = hashMagic msg
@@ -33,7 +32,7 @@ let verify_message addr msg sigb64  =
   match secp256k1.verify Q msghash (r,s) with
   | Error err -> Error err
   | Valid p -> 
-    let senderAddr = pubToAddress (compressed,Q)
+    let senderAddr = Pubkey.toAddress (compressed,Q)
     if addr <> senderAddr
     then Error "Invalid signature"
     else Valid senderAddr
@@ -42,7 +41,7 @@ let firstOf items = items |> Seq.find Option.isSome |> Option.get
 
 let sign_message ((cmp,privkey):PrivateKey) compressed message =
   let pubkey = secp256k1.getPubKey (cmp,privkey)
-  let myaddress = pubToAddress pubkey
+  let myaddress = Pubkey.toAddress pubkey
   let msghash = (hashMagic message)
   let r,s = secp256k1.sign privkey (hashMagic message)
   let sigbytes = (uint256 r) ++ (uint256 s)
