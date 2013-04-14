@@ -51,6 +51,7 @@
     <Compile Include="Conv.Base58.fs" />
     <Compile Include="EcDsa.fs" />
     <Compile Include="Conv.Bitcoin.fs" />
+    <Compile Include="Sign.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

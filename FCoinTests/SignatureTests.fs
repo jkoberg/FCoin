@@ -2,12 +2,14 @@
 
 open NUnit.Framework
 
+
+
+open Conv.Bitcoin
 open Conv.Bytes
 open Crypto
 
-open Conv.Bitcoin
+open Sign
 
- 
 
 module SignatureTests = 
   open EcDsa.secp256k1
@@ -34,7 +36,6 @@ module SignatureTests =
     let addr = "1joekaZPA1QZtg8kH99Fak4FP6JZ17nZi"
     let msg = "Hello Therd!"B
     let sigstr = "G9XC1ARSjDSXtXf2c1UDpWd+1ghkHPANnClKi83dIKNYBTxvrkDJEmnkLXWwrg9T9rClZztpQ89uH2Nn08c6BYQ="
-    let msghash = hashMagic msg
     match verify_message addr msg sigstr with
     | EcDsa.Error err -> Assert.Pass(err)
     | EcDsa.Valid address -> Assert.AreNotEqual(addr, address, "Didn't properly fail sig")
