@@ -16,7 +16,8 @@ let rec egcd n1 n2 =
 let modInv a m =
     match egcd a m with
     | x, y, _ when x = 1I -> y % m
-    | _ -> failwith "Invalid point in EcDsa curve reached"
+    | x,y,r -> 
+        failwith "Invalid point in EcDsa curve reached"
     
 let modDiv a b p = (a * (modInv b p)) % p
 
@@ -24,9 +25,10 @@ let double (c: Curve) p =
     match p with
     | PointO -> PointO
     | Point(x, y) ->
-        let l = modDiv ((3I * (x ** 2)) + c.a) (2I * y) c.p
-        let newx = ((l ** 2) - (2I * x)) % c.p
-        let newy = ((l * (x - newx)) - y) % c.p
+        let s = modDiv ((3I * (x ** 2)) + c.a) (2I * y) c.p
+        let newx = ((s ** 2) - (2I * x)) % c.p // was working
+        //let newx = ((l ** 2) - c.a - (2I * x)) % c.p // wikipedia
+        let newy = ((s * (x - newx)) - y) % c.p
         Point(newx, newy)
 
 let add (c: Curve) p1 p2 =
@@ -35,10 +37,12 @@ let add (c: Curve) p1 p2 =
     | p1, PointO  -> p1
     | p1, p2 when p1 = p2 -> double c p1
     | Point(x1, y1), Point(x2, y2) when x1 = x2 && y1 = -y2 -> PointO
+    | Point(x1, y1), Point(x2, y2) when x1 = x2 -> PointO ///??? //failwith "How to divide by 0???"
     | Point(x1, y1), Point(x2, y2) ->
-        let l = modDiv ((y1 - y2) % c.p) ((x1 - x2) % c.p) c.p
-        let newx = ((l ** 2) - x1 - x2) % c.p
-        let newy = ((l * (x1 - newx)) - y1) % c.p
+        let s = modDiv ((y1 - y2) % c.p) ((x1 - x2) % c.p) c.p
+        let newx = ((s ** 2) - x1 - x2) % c.p // was working, http://www.johannes-bauer.com/compsci/ecc/
+        //let newx = ((l ** 2) - c.a - x1 - x2) % c.p // wikipedia
+        let newy = ((s * (x1 - newx)) - y1) % c.p
         Point(newx, newy)
 
 let rec multiply curve (n:bigint) point =
@@ -54,6 +58,16 @@ let onCurve (c: Curve) pt =
     | Point(x,y) ->
         bigint.ModPow(y, 2I, c.p)  =  (bigint.ModPow(x, 3I, c.p) + (c.a * x) + c.b) % c.p
 
+let fromCompressed (c:Curve) isYOdd x : PublicKey = 
+    let ySquared = (bigint.ModPow(x, 3I, c.p)  +  c.a * bigint.ModPow(x, 2I, c.p)  +  c.b) % c.p
+    let ytrial = bigint.ModPow(ySquared, ((c.p+1I) / 4I), c.p)
+    if isYOdd && ytrial.IsEven
+      then Point(x, c.p - ytrial)
+      else Point(x, ytrial)
+
+type MaybeError<'a> = 
+      | Valid of 'a
+      | Error of string
 
 module secp256k1 =
     open Conv.UnsignedBig
@@ -68,13 +82,55 @@ module secp256k1 =
     let h = 1I
     let curve = {a = a; b = b; p = p}
 
+
     let double = double curve
     let add = add curve
     let multiply = multiply curve
     let onCurve = onCurve curve
-    let getPubKey privkey = multiply privkey G
+    let fromCompressed = fromCompressed curve
+
+    let ( @+ ) = add
+    let ( @* ) = multiply
+
+    let getPubKey privkey : PublicKey = privkey @* G
 
     let rec newPrivKey () : PrivateKey = 
       let r = Crypto.randBits size
-      if r < n then r else newPrivKey()
+      if r > 0I && r < n then r else newPrivKey()
 
+    let rec newKeypair() =
+        let k = newPrivKey()
+        match getPubKey k with
+        | PointO -> newKeypair()
+        | Point(r,_) when r % n = 0I -> newKeypair()
+        | Point(r,_) as kG -> (k, kG, r)
+
+    let checkPubkey pubkey = 
+        match pubkey with
+        | PointO -> Error "invalid pubkey"
+        | pubkey when not (onCurve pubkey) -> Error "invalid pubkey"
+        | pubkey when (n @* pubkey) <> PointO -> Error "invalid pubkey"
+        | _ -> Valid pubkey
+
+    let rec sign privkey hash = 
+        let z = hash
+        let k, kG, r = newKeypair()
+        let s = ((modInv k n) * ((z + ((r * privkey)%n))%n) ) % n
+        if s = 0I then sign privkey hash else
+        (r, s)
+        
+    let outOfRange i = i < 1I || i > n
+
+    let verify pubkey hash (r,s) =
+        if outOfRange r || outOfRange s then Error "Invalid signature" else 
+        match checkPubkey pubkey with
+        | Error msg -> Error msg
+        | Valid pubkey ->
+            let z = hash
+            let w = modInv s n
+            let u1 = (z * w) % n
+            let u2 = (r * w) % n
+            match (u1 @* G) @+ (u2 @* pubkey) with
+            | PointO -> Error "Signature didn't match"
+            | Point(x1, _) when r <> (x1 % n) -> Error "Signature didn't match"
+            | _ -> Valid hash
