@@ -7,8 +7,23 @@ open Conv.Base58
 
 let toUncompressedPubKey (pubkey:PublicKey) = 
   match pubkey with
-  | PointO -> failwith "Bad privkey"
+  | PointO -> "\x00"B
   | Point(x, y) -> "\x04"B ++ uint256 x ++ uint256 y
+
+let toCompressedPubkey (pubkey:PublicKey) = 
+  match pubkey with
+  | PointO -> "\x00"B
+  | Point(x,y) when y.IsEven -> "\x02"B ++ (uint256 x)
+  | Point(x,y) -> "\x03"B ++ (uint256 x)
+
+let fromEncodedPubkey (encoded:byte[]) =
+  match encoded.[0] with
+  | 0x00uy -> PointO
+  | 0x02uy -> secp256k1.fromCompressed false (toBigInt encoded.[1..]) 
+  | 0x03uy -> secp256k1.fromCompressed true (toBigInt encoded.[1..])
+  | 0x04uy -> Point(toBigInt encoded.[1..32], toBigInt encoded.[33..])
+  | _ -> failwith "Unknown key prefix byte"
+
 
 let toPubKeyHex = toUncompressedPubKey >> Conv.Hex.fromBytes
 
