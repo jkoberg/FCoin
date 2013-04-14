@@ -8,6 +8,7 @@ let Sha256 = HashAlgorithm.Create("SHA256")
 
 let sha256 (input:byte[]) = Sha256.ComputeHash(input)
 
+let hash = sha256 >> sha256
 
 let RipeMD160 = HashAlgorithm.Create("RIPEMD160")
 
