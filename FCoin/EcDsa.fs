@@ -59,13 +59,11 @@ let onCurve (c: Curve) pt =
     | Point(x,y) ->
         bigint.ModPow(y, 2I, c.p)  =  (bigint.ModPow(x, 3I, c.p) + (c.a * x) + c.b) % c.p
 
-let fromCompressed (c:Curve) isYOdd x : PublicKey = 
+let fromCompressed (c:Curve) isYOdd (x:bigint) : PublicKey = 
     let ySquared = (bigint.ModPow(x, 3I, c.p)  +  c.a * bigint.ModPow(x, 2I, c.p)  +  c.b) % c.p
     let ytrial = bigint.ModPow(ySquared, ((c.p+1I) / 4I), c.p)
-    if isYOdd && ytrial.IsEven
-      then Point(x, c.p - ytrial)
-      else Point(x, ytrial)
-
+    let y = if isYOdd = ytrial.IsEven then c.p - ytrial else ytrial
+    Point(x, y)
 
 let rec newPrivKey (c:Curve) : PrivateKey = 
     let r = Crypto.randBits c.size
