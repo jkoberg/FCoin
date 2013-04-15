@@ -27,7 +27,6 @@ module KeyHandlingTests =
                           (pubkey |> Pubkey.toHex)
                           (newpub1 |> Pubkey.toHex )
                           (privkey |> Privkey.toHex )
-
           )
       else Assert.Pass(sprintf "unpacked compressed pubkey %s to %s" (compressed |> Conv.Hex.fromBytes) (newpub1 |> Pubkey.toHex))
 

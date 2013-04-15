@@ -1,10 +1,10 @@
 ﻿module Conv.Bitcoin
 
-open EcDsa
-open Crypto
 open Conv.Bytes
 open Conv.Base58
-
+open Crypto
+open EcDsa
+open EcDsa.Arith
 
 module Pubkey =
   let toBytes (p:PublicKey) = 

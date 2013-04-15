@@ -38,7 +38,9 @@ type RadixEncoder(digits:string)  =
 let radix58 = RadixEncoder("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz")
 
 let countLeading item = Seq.takeWhile ((=) item) >> Seq.length
+
 let hashOf = Crypto.sha256 >> Crypto.sha256
+
 let checksum x = (hashOf x).[..3]
 
 

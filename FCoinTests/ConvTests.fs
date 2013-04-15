@@ -101,4 +101,4 @@ module ConvBitcoinTests =
     "5K5zGnFRJAD3viw93hPQLq5Fa3xsLFGYC9yoGMcmVdS1CEaKYs7" =?=  Privkey.toWalletImportFormat (false, priv)
 
   let [<Test>] toAddressFormat () =
-    "1G3zNdwLDQ5Bgcd7axEmJ4LFEJkPPWpEaN" =?= ("5J8LsrnPk9SqwntTvawwGbaSMxpjkVtVUVZCHoNwiG2TcZ2Ca4q" |> Privkey.fromWalletImportFormat |> EcDsa.secp256k1.getPubKey |> Pubkey.toAddress)
+    "1G3zNdwLDQ5Bgcd7axEmJ4LFEJkPPWpEaN" =?= ("5J8LsrnPk9SqwntTvawwGbaSMxpjkVtVUVZCHoNwiG2TcZ2Ca4q" |> Privkey.fromWalletImportFormat |> Privkey.toAddress)
