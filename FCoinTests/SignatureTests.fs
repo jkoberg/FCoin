@@ -21,8 +21,8 @@ module SignatureTests =
   let [<Test>] sign () =
     let _, privkey = myPrivkey
     let _, pubkey = myPubkey
-    let r,s = sign privkey hash
-    match verify pubkey hash (r,s) with
+    let r,s = ecdsa_sign privkey hash
+    match ecdsa_verify pubkey hash (r,s) with
     | EcDsa.Error msg -> Assert.Fail(msg)
     | EcDsa.Valid payload -> Assert.Pass(sprintf "good payload of hash %A" (payload))
 

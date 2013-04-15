@@ -24,12 +24,11 @@ let verify_message addr msg sigb64  =
   let _, R = secp256k1.fromCompressed yIsOdd x
   let minus_e = secp256k1.n - msghash
   let inv_r = modInv r secp256k1.n
-  let Q = secp256k1.multiply inv_r (
-            secp256k1.add 
-              (secp256k1.multiply s R) 
-              (secp256k1.multiply minus_e secp256k1.G)
-            )
-  match secp256k1.verify Q msghash (r,s) with
+  let Q = secp256k1.multiply inv_r
+            (secp256k1.add
+              (secp256k1.multiply s R)
+              (secp256k1.multiply minus_e secp256k1.G) )
+  match secp256k1.ecdsa_verify Q msghash (r,s) with
   | Error err -> Error err
   | Valid p -> 
     let senderAddr = Pubkey.toAddress (compressed,Q)
@@ -40,17 +39,15 @@ let verify_message addr msg sigb64  =
 let firstOf items = items |> Seq.find Option.isSome |> Option.get
 
 let sign_message ((cmp,privkey):PrivateKey) compressed message =
+  let msghash = (hashMagic message)
   let pubkey = secp256k1.getPubKey (cmp,privkey)
   let myaddress = Pubkey.toAddress pubkey
-  let msghash = (hashMagic message)
-  let r,s = secp256k1.sign privkey (hashMagic message)
-  let sigbytes = (uint256 r) ++ (uint256 s)
-  let attempts = seq {
+  let r,s = secp256k1.ecdsa_sign privkey (hashMagic message)
+  firstOf (seq {
     for i in [0uy..4uy] ->
       let nV = 27uy + i + (if compressed then 4uy else 0uy)
-      let sigb64 = [| nV |] ++ sigbytes |> System.Convert.ToBase64String
+      let sigb64 = [| nV |] ++ (uint256 r) ++ (uint256 s) |> System.Convert.ToBase64String
       match verify_message myaddress message sigb64  with
       | Error msg -> None
       | Valid address -> Some sigb64
-      }
-  firstOf attempts
+    })
