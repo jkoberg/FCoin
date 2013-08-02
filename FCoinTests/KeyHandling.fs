@@ -3,21 +3,21 @@
 open NUnit.Framework
 
 module KeyHandlingTests = 
-  open EcDsa.secp256k1
+  open Ecc.Curves
   open Conv.Bitcoin
 
   let compressedHex = ""
 
 
   let [<Test>] fromCompressed () =
-    let privkey, pubkey, r = newKeypair false
+    let privkey, pubkey, r = secp256k1.newKeypair false
 
     let uncompressed = Pubkey.toBytes pubkey
     let newpub2 = Pubkey.fromBytes uncompressed
     Assert.AreEqual(pubkey, newpub2, "didn't encode or decode to uncompressed correctly")
 
     
-    let privkey, pubkey, r = newKeypair true
+    let privkey, pubkey, r = secp256k1.newKeypair true
 
     let compressed = Pubkey.toBytes pubkey
     let newpub1 = Pubkey.fromBytes compressed

@@ -8,14 +8,9 @@ open System.Net
 open System.Net.Sockets
 open System.Threading
  
-
-
-
 //type Socket with
 //  member socket.AsyncAccept() = Async.FromBeginEnd(socket.BeginAccept, socket.EndAccept)
 
-
- 
 type Server() =
   static member Start(hostname:string, ?port) =
     let ipAddress = Dns.GetHostEntry(hostname).AddressList.[0]
@@ -56,14 +51,12 @@ type Server() =
     Async.Start(loop(), cancellationToken = cts.Token)
     { new IDisposable with member x.Dispose() = cts.Cancel(); listener.Close() }
 
-
 // [/snippet]
 
-
-
- 
 // [snippet: Demo server]
+
 let disposable = Server.Start(port = 8090)
+
 Thread.Sleep(60 * 1000)
 printfn "bye!"
 disposable.Dispose()

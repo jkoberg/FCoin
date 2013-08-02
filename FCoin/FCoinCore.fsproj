@@ -49,11 +49,13 @@
     <Compile Include="Crypto.fs" />
     <Compile Include="Conv.fs" />
     <Compile Include="Conv.Base58.fs" />
-    <Compile Include="EcDsa.Arith.fs" />
-    <Compile Include="EcDsa.Utils.fs" />
-    <Compile Include="EcDsa.secp256k1.fs" />
+    <Compile Include="Ecc.fs" />
+    <Compile Include="Ecc.Math.fs" />
+    <Compile Include="Ecc.EcDsa.fs" />
     <Compile Include="Conv.Bitcoin.fs" />
-    <Compile Include="Sign.fs" />
+    <Compile Include="Bitcoin.Signature.fs" />
+    <Compile Include="Coinage.fs" />
+    <Compile Include="Coinblah.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

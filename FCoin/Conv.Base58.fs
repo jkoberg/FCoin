@@ -34,8 +34,11 @@ type RadixEncoder(digits:string)  =
 
   member this.zeroDigit = zero
 
+  static member Base58 = RadixEncoder("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz")
 
-let radix58 = RadixEncoder("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz")
+
+
+let radix58 = RadixEncoder.Base58
 
 let countLeading item = Seq.takeWhile ((=) item) >> Seq.length
 

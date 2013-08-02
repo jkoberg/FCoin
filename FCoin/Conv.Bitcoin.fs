@@ -1,10 +1,10 @@
-﻿module Conv.Bitcoin
+﻿namespace Conv.Bitcoin
 
 open Conv.Bytes
 open Conv.Base58
 open Crypto
-open EcDsa
-open EcDsa.Arith
+open Ecc
+open Ecc.Curves
 
 module Pubkey =
   let toBytes (p:PublicKey) = 
@@ -31,7 +31,6 @@ module Pubkey =
   let toAddress = toBytes >> sha256 >> ripemd160 >> toBase58check 0uy
 
 
-
 module Privkey =
 
   let toBytes ((compressed,k):PrivateKey) = 
@@ -54,7 +53,7 @@ module Privkey =
   let toWalletImportFormat = toBytes >> toBase58check 0x80uy
 
   let fromWalletImportFormat wif : PrivateKey =
-    match Base58.verify wif with
+    match verify wif with
     | Some (0x80uy, payload) when payload.Length = 32 -> (false, toBigInt payload)
     | Some (0x80uy, payload) when payload.Length = 33 && payload.[33] = 0x01uy -> (true, toBigInt payload.[..32])
     | Some (v, _) -> failwith (sprintf "Valid version 0x%x base58check string, but not the version 0x80 private key expected." v)

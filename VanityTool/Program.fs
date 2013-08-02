@@ -1,7 +1,7 @@
 ﻿open Conv
 open Conv.Bytes
 open Conv.Bitcoin
-open EcDsa
+open Ecc.Curves
 
 [<EntryPoint>]
 let main argv =
@@ -24,7 +24,7 @@ let main argv =
     let step_3_solution_privkey = UnsignedBig.fromHex (System.Console.ReadLine())
 
     let (cmp, privkey) = step_1_privkey
-    let secret_vanity_privkey = cmp, (privkey + step_3_solution_privkey) % secp256k1.n
+    let secret_vanity_privkey = cmp, (privkey + step_3_solution_privkey) % secp256k1.Curve.n
     let vanity_pubkey = secp256k1.getPubKey secret_vanity_privkey
 
     printfn "Your new private key: %s" (Privkey.toWalletImportFormat secret_vanity_privkey)

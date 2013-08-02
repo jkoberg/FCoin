@@ -1,6 +1,6 @@
 ﻿module BitcoinAddressTests
 
-open EcDsa
+open Ecc
 open Conv
 
 open NUnit.Framework
@@ -22,7 +22,7 @@ module SampleAddressTests =
                 | None -> failwith "Bad privkey base58"
                 | Some (privmagic, privdata) ->
                     let priv = false, UnsignedBig.fromBytes privdata
-                    let pub = EcDsa.secp256k1.getPubKey priv
+                    let pub = Curves.secp256k1.getPubKey priv
                     let addr = Bitcoin.Pubkey.toAddress pub
                     Assert.AreEqual(address, addr, "Failed to correctly generate address from privkey")
                     Assert.AreEqual(privkey, Bitcoin.Privkey.toWalletImportFormat priv, "Failed to encode privkey as WIF")
